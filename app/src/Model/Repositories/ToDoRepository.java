@@ -42,7 +42,7 @@ public class ToDoRepository {
     }
 
     public void Save(ToDo toDo) throws SQLException {
-        String sql = String.format("INSERT INTO `basketball`.`todo`\n" +
+        String sql = String.format("INSERT INTO `dental_clinic`.`todo`\n" +
                 "(\n" +
                 "`What`,\n" +
                 "`IsDone`)\n" +
@@ -61,7 +61,7 @@ public class ToDoRepository {
     }
 
     public void Update(ToDo todo) throws SQLException {
-        String sql = String.format("UPDATE `basketball`.`todo`\n" +
+        String sql = String.format("UPDATE `dental_clinic`.`todo`\n" +
                 "SET\n" +
                 "`What` = '%s',\n" +
                 "`IsDone` = %s\n" +

@@ -1,6 +1,8 @@
 package basic;
 
+import Model.Repositories.PatientRepository;
 import Model.Repositories.UserRepository;
+import Model.Tables.Patient;
 import Model.Tables.User;
 import services.UserService;
 import services.WindowService;
@@ -23,11 +25,13 @@ public class Login{
     private JButton register;
 
     private UserRepository userRepository;
+    private PatientRepository patientRepository;
     private WindowService windowService;
 
     public Login() throws SQLException {
         userRepository = new UserRepository();
         windowService = new WindowService();
+        patientRepository = new PatientRepository();
 
         login.addActionListener(new ActionListener() {
             @Override
@@ -58,6 +62,9 @@ public class Login{
 
                 try {
                     userRepository.Save(login, pass);
+                    User justSavedUser = userRepository.Get(login, pass).get(0);
+
+                    patientRepository.Save(justSavedUser.getId());
 
                     JOptionPane.showMessageDialog(null, "Registered", "InfoBox:", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException e1) {

@@ -5,6 +5,7 @@ import Model.Tables.Doctor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +25,8 @@ public class DoctorsRepository {
     public List<Doctor> Get() throws SQLException {
         String sql = String.format("SELECT * \n" +
                                 "FROM dental_clinic.doctor d\n" +
-                                "JOIN dental_clinic.speciality s on d.specialityId = s.id");
+                                "JOIN dental_clinic.speciality s on d.specialityId = s.id \n" +
+                                "join dental_clinic.user u on d.userid = u.id");
 
         ResultSet results = driver.statement.executeQuery(sql);
 
@@ -35,10 +37,13 @@ public class DoctorsRepository {
             String name = results.getString(2);
             int room = results.getInt(3);
             String phone = results.getString(4);
-            Date start = results.getDate(5);
-            Date end = results.getDate(6);
+            Date start = results.getTime(5);
+            Date end = results.getTime(6);
             int sPid = results.getInt(7);
             String sName = results.getString(10);
+            int userId = results.getInt(8);
+            String userLogin = results.getString(12);
+            String password = results.getString(13);
 
             Doctor doctor = new Doctor();
             doctor.setId(id);
@@ -49,6 +54,9 @@ public class DoctorsRepository {
             doctor.setEndTime(end);
             doctor.setSpecialityId(sPid);
             doctor.setSpecialityName(sName);
+            doctor.setUserId(userId);
+            doctor.setLogin(userLogin);
+            doctor.setPassword(password);
 
             doctorList.add(doctor);
         }
@@ -57,7 +65,8 @@ public class DoctorsRepository {
     }
 
     public void Save(Doctor doctor) throws SQLException {
-        userRepository.Save(doctor.getLogin(), doctor.getPassword());
+        userRepository.Save(doctor.getLogin(), doctor.getPassword(), 3);
+        int userId = userRepository.Get(doctor.getLogin(), doctor.getPassword()).stream().findFirst().get().getId();
 
         String sql = String.format("INSERT INTO `dental_clinic`.`doctor`\n" +
                 "(`Name`,\n" +
@@ -65,7 +74,8 @@ public class DoctorsRepository {
                 "`Phone`,\n" +
                 "`StartTime`,\n" +
                 "`EndTime`,\n" +
-                "`SpecialityId`)\n" +
+                "`SpecialityId`," +
+                "`UserId`) \n" +
                 "VALUES\n" +
                 "(\n" +
                 "'%s',\n" +
@@ -73,10 +83,13 @@ public class DoctorsRepository {
                 "'%s',\n" +
                 "'%s',\n" +
                 "'%s',\n" +
-                "%s\n" +
-                ");\n", doctor.getName(), doctor.getRoom(), doctor.getPhone(), doctor.getStartTime(), doctor.getEndTime(), doctor.getSpecialityId());
+                "%s,\n" +
+                "%s" +
+                ");\n", doctor.getName(), doctor.getRoom(), doctor.getPhone(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doctor.getStartTime()), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doctor.getEndTime()), doctor.getSpecialityId(), userId);
 
         int result = driver.statement.executeUpdate(sql);
+
+
     }
 
     public void Delete(int id) throws SQLException {
@@ -93,8 +106,8 @@ public class DoctorsRepository {
                 "`Phone` = '%s',\n" +
                 "`StartTime` = '%s',\n" +
                 "`EndTime` = '%s',\n" +
-                "`SpecialityId` = %s,\n" +
-                "WHERE `Id` = %s;\n", doctor.getName(), doctor.getRoom(), doctor.getPhone(), doctor.getStartTime(), doctor.getEndTime(), doctor.getSpecialityId(), doctor.getId());
+                "`SpecialityId` = %s\n" +
+                "WHERE `Id` = %s;\n", doctor.getName(), doctor.getRoom(), doctor.getPhone(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doctor.getStartTime()), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doctor.getEndTime()), doctor.getSpecialityId(), doctor.getId());
 
         int result = driver.statement.executeUpdate(sql);
     }

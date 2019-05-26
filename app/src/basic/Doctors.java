@@ -108,7 +108,7 @@ public class Doctors {
             return;
         }
 
-        Doctor doctor = new Doctor(name, Integer.parseInt(sId), login, pass, Integer.parseInt(room), phone, new SimpleDateFormat("dd/MM/yyyy hh:mm").parse(startT), new SimpleDateFormat("dd/MM/yyyy hh:mm").parse(endT));
+        Doctor doctor = new Doctor(name, Integer.parseInt(sId), login, pass, Integer.parseInt(room), phone, new SimpleDateFormat("hh:mm").parse(startT), new SimpleDateFormat("hh:mm").parse(endT));
 
         doctorsRepository.Save(doctor);
 
@@ -155,13 +155,13 @@ public class Doctors {
         }
 
         if (!TryParseDate(startT)) {
-            error = "start time must be date";
+            error = "start time must time hh:mm";
 
             return error;
         }
 
         if (!TryParseDate(endT)) {
-            error = "start time must be date";
+            error = "end time must be time hh:mm";
 
             return error;
         }
@@ -171,7 +171,7 @@ public class Doctors {
 
     private boolean TryParseDate(String val) {
         try {
-            new SimpleDateFormat("dd/MM/yyyy hh:mm").parse(val);
+            new SimpleDateFormat("hh:mm").parse(val);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -186,6 +186,13 @@ public class Doctors {
 
         FillDoctorFromEditFields(doctor);
 
+        String error = ValidateDoctor(doctor.getName(), doctor.getLogin(), doctor.getPassword(), doctor.getPhone(), Integer.toString(doctor.getRoom()), new SimpleDateFormat("hh:mm").format(doctor.getStartTime()), new SimpleDateFormat("hh:mm").format(doctor.getEndTime()), Integer.toString(doctor.getSpecialityId()));
+
+        if (error.length() > 0) {
+            errorLabel.setText(error);
+            return;
+        }
+
         doctorsRepository.Update(doctor);
 
         FillTable();
@@ -195,8 +202,8 @@ public class Doctors {
         doctor.setName(nameField.getText());
         doctor.setPhone(phoneField.getText());
         doctor.setRoom(Integer.parseInt(roomField.getText()));
-        doctor.setStartTime(new SimpleDateFormat("dd/MM/yyyy hh:mm").parse(startTimeField.getText()));
-        doctor.setEndTime(new SimpleDateFormat("dd/MM/yyyy hh:mm").parse(endTimeField.getText()));
+        doctor.setStartTime(new SimpleDateFormat("hh:mm").parse(startTimeField.getText()));
+        doctor.setEndTime(new SimpleDateFormat("hh:mm").parse(endTimeField.getText()));
         doctor.setSpecialityId(Integer.parseInt(specialityIdField.getText()));
         doctor.setLogin(loginField.getText());
         doctor.setPassword(passField.getText());

@@ -47,7 +47,7 @@ public class MainAdmin {
 
         specialitiesButton.addActionListener(e -> {
             try {
-                WindowService.JustGoToVindow(new Doctors().panel);
+                WindowService.JustGoToVindow(new Specialities().panel);
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
@@ -55,7 +55,7 @@ public class MainAdmin {
 
         doctorsButton.addActionListener(e -> {
             try {
-                WindowService.JustGoToVindow(new Games().panel);
+                WindowService.JustGoToVindow(new Doctors().panel);
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }

@@ -16,8 +16,6 @@ public class MainUser {
     public JPanel panel;
     private JLabel timer;
     private JTextArea newsElement;
-    private JButton button1;
-    private JButton teamsBtn;
     private JButton yourReceptionsBtn;
     private JButton yourInfoBtn;
 
@@ -34,15 +32,7 @@ public class MainUser {
 
         yourReceptionsBtn.addActionListener(e -> {
             try {
-                WindowService.JustGoToVindow(new Doctors().panel);
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        });
-
-        teamsBtn.addActionListener(e -> {
-            try {
-                WindowService.JustGoToVindow(new Teams().panel);
+                WindowService.JustGoToVindow(new Receptions().panel);
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
@@ -50,7 +40,7 @@ public class MainUser {
 
         yourInfoBtn.addActionListener(e -> {
             try {
-                WindowService.JustGoToVindow(new Games().panel);
+                WindowService.JustGoToVindow(new UserInfo().panel);
             } catch (SQLException e1) {
                 e1.printStackTrace();
             }
@@ -66,30 +56,11 @@ public class MainUser {
     private void GenerateNewsElements(List<News> newsList) {
         String resultNews = "";
         for(News news : newsList) {
-//            JPanel oneNews = GenerateOneNewsElement(news);
             resultNews = resultNews + news.getCreatedAt() + " " + news.getText() + " \n \n";
-//            newsPanel.add(oneNews, new GridConstraints());
         }
 
         newsElement.setText(resultNews);
-
-//        newsPanel.revalidate();
-//        newsPanel.repaint();
     }
 
-    private JPanel GenerateOneNewsElement(News news) {
-        JPanel wrapper = new JPanel();
-
-        JLabel timestamp = new JLabel();
-        timestamp.setText(news.getCreatedAt().toString());
-
-        JLabel newsText = new JLabel();
-        newsText.setText(news.getText());
-
-        wrapper.add(timestamp);
-        wrapper.add(newsText);
-
-        return wrapper;
-    }
 
 }

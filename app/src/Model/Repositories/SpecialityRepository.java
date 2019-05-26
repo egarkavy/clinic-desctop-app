@@ -47,7 +47,7 @@ public class SpecialityRepository {
                 "(\n" +
                 "`Name`)\n" +
                 "VALUES\n" +
-                "'%s')", speciality.getName());
+                "('%s')", speciality.getName());
 
         int result = driver.statement.executeUpdate(sql);
     }

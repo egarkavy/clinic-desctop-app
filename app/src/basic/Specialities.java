@@ -1,6 +1,7 @@
 package basic;
 
-import Model.Repositories.PlayersRepository;
+import Model.Repositories.SpecialityRepository;
+import Model.Tables.Speciality;
 import services.UserService;
 
 import javax.swing.*;
@@ -13,34 +14,29 @@ import java.util.List;
 /**
  * Created by super on 5/19/2019.
  */
-public class Teams {
+public class Specialities {
     public JPanel panel;
     private JTable table;
     private JButton addBtn;
     private JButton editBtn;
     private JButton deleteBtn;
     private JTextField nameField;
-    private JTextField countryField;
     private JLabel errorLabel;
     private JPanel editPanel;
 
-    private List<Team> teams;
-    private PlayersRepository playersRepository;
-    private CountryRepository countryRepository;
-    private TeamRepository teamRepository;
+    private List<Speciality> specialities;
+    private SpecialityRepository specialityRepository;
 
     private DefaultTableModel model;
 
-    public Teams() throws SQLException {
-        playersRepository = new PlayersRepository();
-        countryRepository = new CountryRepository();
-        teamRepository = new TeamRepository();
+    public Specialities() throws SQLException {
+        specialityRepository = new SpecialityRepository();
 
         if (UserService.currentUser.getRoleId() == 2) {
             editPanel.setVisible(false);
         }
 
-        Object[] columns = {"Id", "Name", "Country" };
+        Object[] columns = {"Id", "Name" };
         model = new DefaultTableModel();
         model.setColumnIdentifiers(columns);
         table.setModel(model);
@@ -81,18 +77,17 @@ public class Teams {
 
     private void Add() throws SQLException {
         String name = nameField.getText();
-        String country = countryField.getText();
 
-        String error = ValidateTeam(name, country);
+        String error = ValidateSpeciality(name);
 
         if (error.length() > 0) {
             errorLabel.setText(error);
             return;
         }
 
-        Team team = new Team(name, Integer.parseInt(country));
+        Speciality speciality = new Speciality(name);
 
-        teamRepository.Save(team);
+        specialityRepository.Save(speciality);
 
         FillTable();
     }
@@ -101,33 +96,19 @@ public class Teams {
         int i = table.getSelectedRow();
 
         if (i >= 0) {
-            Team team = GetTeamFromTable();
+            Speciality speciality = GetTeamFromTable();
 
-            teamRepository.Delete(team.getId());
+            specialityRepository.Delete(speciality.getId());
         }
 
         FillTable();
     }
 
-    private String ValidateTeam(String name, String country) throws SQLException {
+    private String ValidateSpeciality(String name) throws SQLException {
         String error = "";
-        if (name == null || country == null) {
+        if (name == null) {
             error = "All fields are required";
 
-            return error;
-        }
-
-        if (!TryParseInt(country)) {
-            error = "CountryId must be int";
-            return error;
-        }
-
-        List<Country> countries = countryRepository.Get();
-
-        int cId = Integer.parseInt(country);
-
-        if (!countries.stream().anyMatch(x -> x.getId() == cId)) {
-            error = "Choose correct county Id";
             return error;
         }
 
@@ -135,39 +116,37 @@ public class Teams {
     }
 
     private void Edit() throws SQLException {
-        Team team = GetTeamFromTable();
+        Speciality speciality = GetTeamFromTable();
 
-        FillTeamFromEditFields(team);
+        FillSpecialityFromEditFields(speciality);
 
-        teamRepository.Update(team);
+        specialityRepository.Update(speciality);
 
         FillTable();
     }
 
-    private void FillTeamFromEditFields(Team team) {
-        team.setCountryId(Integer.parseInt(countryField.getText()));
-        team.setTeamName(nameField.getText());
+    private void FillSpecialityFromEditFields(Speciality speciality) {
+        speciality.setName(nameField.getText());
     }
 
-    private Team GetTeamFromTable() {
+    private Speciality GetTeamFromTable() {
         int i = table.getSelectedRow();
 
         int teamId = Integer.parseInt(model.getValueAt(i, 0).toString());
 
-        Team team = teams.stream().filter(x -> x.getId() == teamId).findFirst().get();
+        Speciality speciality = specialities.stream().filter(x -> x.getId() == teamId).findFirst().get();
 
-        return team;
+        return speciality;
     }
 
     private void FillEditField() {
-        Team team = GetTeamFromTable();
+        Speciality speciality= GetTeamFromTable();
 
-        FillEditField(team);
+        FillEditField(speciality);
     }
 
-    private void FillEditField(Team team) {
-        nameField.setText(team.getTeamName());
-        countryField.setText(Integer.toString(team.getCountryId()));
+    private void FillEditField(Speciality speciality) {
+        nameField.setText(speciality.getName());
     }
 
     private boolean TryParseInt(String val) {
@@ -182,17 +161,16 @@ public class Teams {
     public void FillTable() throws SQLException {
         model.setRowCount(0);
 
-        teams = teamRepository.Get();
-        FillTable(teams);
+        specialities = specialityRepository.Get();
+        FillTable(specialities);
     }
 
-    public void FillTable(List<Team> teams) {
-        for(Team team : teams) {
-            Object[] row = new Object[3];
+    public void FillTable(List<Speciality> specialities) {
+        for(Speciality speciality : specialities) {
+            Object[] row = new Object[2];
 
-            row[0] = team.getId();
-            row[1] = team.getTeamName();
-            row[2] = team.getCountryName();
+            row[0] = speciality.getId();
+            row[1] = speciality.getName();
 
             model.addRow(row);
         }

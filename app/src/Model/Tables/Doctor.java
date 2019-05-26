@@ -16,6 +16,7 @@ public class Doctor {
     private String Phone;
     private Date StartTime;
     private Date EndTime;
+    private int UserId;
 
     public Doctor() {
 
@@ -110,5 +111,13 @@ public class Doctor {
 
     public void setEndTime(Date endTime) {
         EndTime = endTime;
+    }
+
+    public int getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(int userId) {
+        UserId = userId;
     }
 }

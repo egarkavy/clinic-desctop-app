@@ -26,6 +26,7 @@ public class UserRepository {
         List<User> users = new ArrayList<User>();
 
         while (results.next()) {
+            int id = results.getInt("Id");
             String name = results.getString("UserName");
             String pass = results.getString("Password");
             int roleId = results.getInt("RoleId");
@@ -34,6 +35,7 @@ public class UserRepository {
             user.setPassword(pass);
             user.setUserName(name);
             user.setRoleId(roleId);
+            user.setId(id);
 
             users.add(user);
         }
@@ -43,6 +45,12 @@ public class UserRepository {
 
     public void Save(String userName, String password) throws SQLException {
         String sql = String.format("INSERT into `user` (`UserName`, `Password`, `RoleId` ) values ('%s', '%s', 2)", userName, password);
+
+        int result = driver.statement.executeUpdate(sql);
+    }
+
+    public void Save(String userName, String password, int role) throws SQLException {
+        String sql = String.format("INSERT into `user` (`UserName`, `Password`, `RoleId` ) values ('%s', '%s', %s)", userName, password, role);
 
         int result = driver.statement.executeUpdate(sql);
     }
