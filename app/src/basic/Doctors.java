@@ -15,9 +15,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-/**
- * Created by super on 5/18/2019.
- */
 public class Doctors {
     public JPanel panel;
     private JTable table;

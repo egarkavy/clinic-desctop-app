@@ -9,9 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by super on 5/12/2019.
- */
+
 public class MainUser {
     public JPanel panel;
     private JLabel timer;

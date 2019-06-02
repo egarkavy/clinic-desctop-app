@@ -33,7 +33,7 @@ public class WindowService {
     }
 
     public static void GoToWindow(JPanel toClose, JPanel toOpen) {
-        JFrame frame = new JFrame("MainAdmin");
+        JFrame frame = new JFrame("MainApp");
         frame.setContentPane(toOpen);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
@@ -44,7 +44,7 @@ public class WindowService {
     }
 
     public static void JustGoToVindow(JPanel toOpen) {
-        JFrame frame = new JFrame("MainAdmin");
+        JFrame frame = new JFrame("MainApp");
         frame.setContentPane(toOpen);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
